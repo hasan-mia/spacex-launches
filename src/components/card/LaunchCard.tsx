@@ -18,7 +18,6 @@ const LaunchCard: React.FC<LaunchCardProps> = ({ launch }) => {
     );
     return formattedDate;
   };
-  console.log(launch);
   return (
     <Card className="d-flex justify-content-center align-items-center">
       <div style={{ width: "124px", height: "124px" }} className="mt-4">

@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
 import React, {
+  Dispatch,
   ReactNode,
+  SetStateAction,
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -121,10 +124,16 @@ export interface LaunchProviderProps {
 
 export interface LaunchContextValue {
   launches: Launch[];
+  setLaunches: Dispatch<SetStateAction<Launch[]>>;
   loading: boolean;
   error: ApiError | null;
+  fetchData: (rocketName?: string) => Promise<void>;
 }
 
+export interface ApiError {
+  message: string;
+  code: number;
+}
 const LaunchContext = createContext<LaunchContextValue | undefined>(undefined);
 
 export const useLaunchContext = () => {
@@ -135,40 +144,58 @@ export const useLaunchContext = () => {
   return context;
 };
 
-export const LaunchProvider: React.FC<LaunchProviderProps> = ({ children }) => {
+export const useFetchData = () => {
   const [launches, setLaunches] = useState<Launch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchLaunches();
-        console.log(data);
-        setLaunches(data);
-        setLoading(false);
-      } catch (error: unknown) {
-        if (isApiError(error)) {
-          setError(error);
-        } else {
-          setError({ message: "An unknown error occurred", code: 500 });
-        }
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  function isApiError(error: unknown): error is ApiError {
+  const isApiError = (error: unknown): error is ApiError => {
     return (
       (error as ApiError).message !== undefined &&
       (error as ApiError).code !== undefined
     );
-  }
+  };
+  const fetchData = useCallback(async (rocketName?: string) => {
+    try {
+      const data = await fetchLaunches();
+      setLoading(false);
+      if (rocketName) {
+        const filterData = data.filter(
+          (d) =>
+            d.rocket.rocket_name.toLowerCase() === rocketName.toLowerCase(),
+        );
+        if (filterData.length > 0) {
+          setLaunches(filterData);
+        } else {
+          setLaunches(data);
+        }
+      } else {
+        setLaunches(data);
+      }
+    } catch (error: unknown) {
+      if (isApiError(error)) {
+        setError(error);
+      } else {
+        setError({ message: "An unknown error occurred", code: 500 });
+      }
+      setLoading(false);
+    }
+  }, []);
+
+  return { fetchData, launches, setLaunches, loading, error };
+};
+
+export const LaunchProvider: React.FC<LaunchProviderProps> = ({ children }) => {
+  const { fetchData, launches, setLaunches, loading, error } = useFetchData();
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
-    <LaunchContext.Provider value={{ launches, loading, error }}>
+    <LaunchContext.Provider
+      value={{ fetchData, launches, setLaunches, loading, error }}
+    >
       {children}
     </LaunchContext.Provider>
   );
