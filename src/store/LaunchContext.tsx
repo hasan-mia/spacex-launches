@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
 import React, {
-    ReactNode,
-    createContext,
-    useContext,
-    useEffect,
-    useState
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
 } from "react";
 import { fetchLaunches } from "./api/api";
 
-interface Core {
+export interface Core {
   core_serial: string;
   flight: number;
   block: number | null;
@@ -21,7 +21,7 @@ interface Core {
   landing_vehicle: string | null;
 }
 
-interface Payload {
+export interface Payload {
   payload_id: string;
   norad_id: number[];
   reused: boolean;
@@ -51,19 +51,19 @@ interface Payload {
   };
 }
 
-interface SecondStage {
+export interface SecondStage {
   block: number;
   payloads: Payload[];
 }
 
-interface Fairings {
+export interface Fairings {
   reused: boolean;
   recovery_attempt: boolean;
   recovered: boolean;
   ship: string | null;
 }
 
-interface Rocket {
+export interface Rocket {
   rocket_id: string;
   rocket_name: string;
   rocket_type: string;
@@ -74,16 +74,16 @@ interface Rocket {
   fairings: Fairings;
 }
 
-interface Links {
+export interface Links {
   mission_patch: string;
   video_link: string;
 }
 
-interface Timeline {
+export interface Timeline {
   webcast_liftoff: number;
 }
 
-interface Launch {
+export interface Launch {
   flight_number: number;
   mission_name: string;
   mission_id: string[];
@@ -98,10 +98,10 @@ interface Launch {
   launch_window: number;
   rocket: Rocket;
   ships: string[];
-  telemetry: any; // Define the type for telemetry data
-  launch_site: any; // Define the type for launch site data
+  telemetry: any;
+  launch_site: any;
   launch_success: boolean;
-  launch_failure_details: any; // Define the type for launch failure details
+  launch_failure_details: any;
   links: Links;
   details: string;
   static_fire_date_utc: string;
@@ -110,16 +110,16 @@ interface Launch {
   crew: any;
 }
 
-interface ApiError {
+export interface ApiError {
   message: string;
   code: number;
 }
 
-interface LaunchProviderProps {
+export interface LaunchProviderProps {
   children: ReactNode;
 }
 
-interface LaunchContextValue {
+export interface LaunchContextValue {
   launches: Launch[];
   loading: boolean;
   error: ApiError | null;
@@ -130,7 +130,7 @@ const LaunchContext = createContext<LaunchContextValue | undefined>(undefined);
 export const useLaunchContext = () => {
   const context = useContext(LaunchContext);
   if (!context) {
-    throw new Error('useLaunchContext must be used within a LaunchProvider');
+    throw new Error("useLaunchContext must be used within a LaunchProvider");
   }
   return context;
 };
@@ -151,7 +151,7 @@ export const LaunchProvider: React.FC<LaunchProviderProps> = ({ children }) => {
         if (isApiError(error)) {
           setError(error);
         } else {
-          setError({ message: 'An unknown error occurred', code: 500 });
+          setError({ message: "An unknown error occurred", code: 500 });
         }
         setLoading(false);
       }
@@ -161,7 +161,10 @@ export const LaunchProvider: React.FC<LaunchProviderProps> = ({ children }) => {
   }, []);
 
   function isApiError(error: unknown): error is ApiError {
-    return (error as ApiError).message !== undefined && (error as ApiError).code !== undefined;
+    return (
+      (error as ApiError).message !== undefined &&
+      (error as ApiError).code !== undefined
+    );
   }
 
   return (
