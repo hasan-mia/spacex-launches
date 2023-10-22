@@ -1,6 +1,53 @@
-# Getting Started with Create React App
+## Project Description and feature
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+LIVE [https://spacexlunch.vercel.app/](https://spacexlunch.vercel.app)
+
+1. React Project with TypeScript
+2. Use Context, Hooks, Routing(React router dom v6), and Functional Component
+3. Use the following SpaceX Launch API: https://api.spacexdata.com/v3/launches
+4. Use Bootstrap 5
+5. Make the UI responsive as described in Figma file
+6. Avoid writing extra CSS classes.
+7. Search By Rocket Name.
+8. Filters data by
+   A. By Launch Date
+   i. Last Week
+   ii. Last Month
+   iii. Last Year
+   B. By Launch Status ( Failure, Success )
+9. All upcoming
+10. Add pagination which shows per page 9 items. If the user reloads the page then
+    show the list according to the page number.
+
+## Folder and File Stracture
+
+```bash
+__index.ts (server index file)
+______public
+______src
+_________app.tsx
+_________index.tsx
+_________index.css
+_________assets ( extra file like image)
+_________components ( extra file like image)
+_______________card ( launch card component)
+_______________footer ( footer component)
+_______________header ( header component)
+_______________paginate ( pagination component functionality)
+_______________search ( search component and functionality)
+_________layouts ( common layout)
+_________pages ( extra file like image)
+_______________Home.tsx ( Home page)
+_______________NotFound.tsx  ( 404! error page)
+_________routes ( All routes)
+_________store ( react context state management)
+____________api ( axios funcationality for fetching data)
+_______________api.ts ( fetch launch data)
+_______________LaunchContext.tsx (  LaunchContext Provider)
+_________types ( common data type folder )
+____________image.png.d.ts ( image type)
+
+```
 
 ## Available Scripts
 
@@ -32,15 +79,3 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
